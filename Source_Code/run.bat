@@ -59,7 +59,7 @@ if errorlevel 1 (
 )
 
 REM ===== Get Maven Version =====
-for /f "tokens=3" %%m in ('mvn -version ^| findstr /i "Apache Maven"') do (
+for /f "tokens=3" %%m in ('mvn -version ^| findstr /R /C:"^Apache Maven"') do (
     set "MAVEN_VER=%%m"
 )
 set "MAVEN_VER=%MAVEN_VER:"=%"
