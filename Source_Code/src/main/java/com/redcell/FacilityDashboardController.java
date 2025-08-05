@@ -124,7 +124,6 @@ public class FacilityDashboardController {
     private void updateComponentCheckboxes() {
         if (wholeBloodCheck != null && rccPrbcCheck != null && sdpCheck != null && ffpCheck != null) {
             List<Component> availableComponents = currentFacility.getComponents();
-            
             // For demonstration, let's set some components as available
             if (availableComponents.isEmpty()) {
                 availableComponents.add(Component.WHOLE_BLOOD);
@@ -132,7 +131,6 @@ public class FacilityDashboardController {
                 availableComponents.add(Component.SDP);
                 currentFacility.setComponents(availableComponents);
             }
-            
             wholeBloodCheck.setSelected(availableComponents.contains(Component.WHOLE_BLOOD));
             rccPrbcCheck.setSelected(availableComponents.contains(Component.RCC_PRBC));
             sdpCheck.setSelected(availableComponents.contains(Component.SDP));

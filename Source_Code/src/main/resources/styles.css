@@ -130,7 +130,7 @@
     -fx-border-radius: 5;
 }
 
-/* Ad Slideshow Styles */
+/* Announcement Slideshow Styles */
 .ad-slideshow-container {
     -fx-background-color: #f8f9fa;
     -fx-background-radius: 5;
@@ -159,7 +159,8 @@
     -fx-padding: 10 0 0 0;
 }
 
-.slideshow-control-button {
+.slideshow-controls .slideshow-control-button {
+    
     -fx-background-color: #8B0000;
     -fx-text-fill: white;
     -fx-font-size: 12px;
@@ -172,9 +173,13 @@
     -fx-alignment: center;
 }
 
-.slideshow-control-button:hover {
+.slideshow-controls .slideshow-control-button:hover {
     -fx-background-color: #A52A2A;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+}
+
+.slideshow-controls .slideshow-control-button SVGPath {
+    -fx-fill: white;
 }
 .main-content {
     -fx-padding: 0;
@@ -192,7 +197,7 @@
 
 .welcome-text {
     -fx-font-size: 18px;
-    -fx-fill: #6c757d;
+    -fx-fill: #333333; /* Darker color for better visibility */
     -fx-text-alignment: center;
 }
 
@@ -395,7 +400,11 @@
 
 .welcome-subtext {
     -fx-font-size: 16px;
-    -fx-fill: #666666;
+    -fx-fill: #333333; /* Darker color for better visibility */
+}
+
+.check-box .text {
+    -fx-fill: #333333; /* Ensure checkbox text is visible */
 }
 
 /* Stats Section */

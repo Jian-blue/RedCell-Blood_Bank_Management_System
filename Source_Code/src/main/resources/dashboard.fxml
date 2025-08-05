@@ -58,12 +58,14 @@
             <Region VBox.vgrow="ALWAYS" />
             
             <!-- Blood Drop Image -->
-            <ImageView fitHeight="268.0" fitWidth="158.0" preserveRatio="true" styleClass="blood-drop-image">
-                <Image url="@img/blood-drop.png" />
+            <HBox alignment="CENTER_RIGHT">
                 <VBox.margin>
                     <Insets bottom="0" left="0" right="0" />
                 </VBox.margin>
-            </ImageView>
+                <ImageView fitHeight="268.0" fitWidth="158.0" preserveRatio="true" styleClass="blood-drop-image">
+                    <Image url="@img/blood-drop.png" />
+                </ImageView>
+            </HBox>
             
             <!-- Footer Section -->
             <VBox styleClass="sidebar-footer" spacing="10">
