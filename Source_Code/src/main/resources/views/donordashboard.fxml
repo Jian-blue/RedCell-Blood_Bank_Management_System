@@ -12,6 +12,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.SVGPath?>
 
 <ScrollPane fitToWidth="true" styleClass="main-scroll-pane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.redcell.DonorDashboardController">
     <VBox spacing="20" styleClass="home-container" stylesheets="@/styles.css">
@@ -95,18 +96,26 @@
                 <Text styleClass="link-text" text="> See More" />
             </VBox>
             
-            <!-- Ad Slideshow -->
+            <!-- Announcement Slideshow -->
             <VBox styleClass="section-container" HBox.hgrow="ALWAYS" alignment="CENTER">
                 <padding>
                     <Insets top="15" right="15" bottom="15" left="15" />
                 </padding>
-                <Text styleClass="section-header" text="Advertisements" textAlignment="CENTER" />
+                <Text styleClass="section-header" text="Announcements" textAlignment="CENTER" />
                 <VBox fx:id="adSlideshow" styleClass="ad-slideshow-container" alignment="CENTER">
                     <ImageView fx:id="adImageView" fitWidth="200" fitHeight="150" preserveRatio="true" styleClass="ad-image" onMouseClicked="#handleAdImageClick" />
                 </VBox>
                 <HBox alignment="CENTER" spacing="5" styleClass="slideshow-controls">
-                    <Button text="&lt;" onAction="#previousAd" styleClass="slideshow-control-button" />
-                    <Button text="&gt;" onAction="#nextAd" styleClass="slideshow-control-button" />
+                    <Button onAction="#previousAd" styleClass="slideshow-control-button">
+                        <graphic>
+                            <SVGPath content="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                        </graphic>
+                    </Button>
+                    <Button onAction="#nextAd" styleClass="slideshow-control-button">
+                        <graphic>
+                            <SVGPath content="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
+                        </graphic>
+                    </Button>
                 </HBox>
             </VBox>
         </HBox>

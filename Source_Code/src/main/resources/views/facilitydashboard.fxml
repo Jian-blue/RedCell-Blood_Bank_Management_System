@@ -33,30 +33,18 @@
                         <GridPane fx:id="componentsGrid" hgap="10" vgap="10">
                             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0">
                                 <CheckBox fx:id="wholeBloodCheck" selected="true" text="Whole Blood" />
-                                <ImageView fitHeight="16" fitWidth="16">
-                                    <Image url="@../img/check.png" />
-                                </ImageView>
                             </HBox>
                             
                             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
                                 <CheckBox fx:id="rccPrbcCheck" selected="true" text="RCC/PRBC" />
-                                <ImageView fitHeight="16" fitWidth="16">
-                                    <Image url="@../img/check.png" />
-                                </ImageView>
                             </HBox>
                             
                             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                 <CheckBox fx:id="sdpCheck" selected="true" text="SDP" />
-                                <ImageView fitHeight="16" fitWidth="16">
-                                    <Image url="@../img/check.png" />
-                                </ImageView>
                             </HBox>
                             
                             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                 <CheckBox fx:id="ffpCheck" selected="false" text="FFP" />
-                                <ImageView fitHeight="16" fitWidth="16">
-                                    <Image url="@../img/x.png" />
-                                </ImageView>
                             </HBox>
                         </GridPane>
                         
