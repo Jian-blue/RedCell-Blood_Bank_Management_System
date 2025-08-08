@@ -106,7 +106,7 @@ public class DonorDashboardController {
         // Set current user information
         userNameText.setText("Hello " + "User");
         dateText.setText("Today is " + LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy")));
-        bloodGroupText.setText("My Blood Group: " +"A(-ve)");
+        bloodGroupText.setText("My Blood Group: " +"A+");
         statusText.setText("My Status: " + "ELIGIBLE");
         locationText.setText("Current Location: " + "Mirpur, Dhaka");
     }
@@ -119,7 +119,7 @@ public class DonorDashboardController {
         TableColumn<Donation, Integer> unitsCol = new TableColumn<>("Units");
         unitsCol.setCellValueFactory(new PropertyValueFactory<>("units"));
 
-        TableColumn<Donation, String> locationCol = new TableColumn<>("Location");
+        TableColumn<Donation, String> locationCol = new TableColumn<>("Hospital");
         locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         TableColumn<Donation, LocalDate> dateCol = new TableColumn<>("Date");
@@ -138,64 +138,145 @@ public class DonorDashboardController {
             }
         });
         
-        TableColumn<Donation, String> statusCol = new TableColumn<>("Select");
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        TableColumn<Donation, String> selectCol = new TableColumn<>("Select");
+        selectCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+        
+        // Custom cell factory for select column to add Donate buttons
+        selectCol.setCellFactory(column -> new TableCell<Donation, String>() {
+            private final javafx.scene.control.Button donateButton = new javafx.scene.control.Button("Donate");
+            
+            {
+                // Configure button style
+                donateButton.getStyleClass().add("donate-button");
+                donateButton.setMaxWidth(Double.MAX_VALUE);
+                
+                // Add action handler for the donate button
+                donateButton.setOnAction(event -> {
+                    Donation donation = getTableView().getItems().get(getIndex());
+                    handleDonateButtonClick(donation);
+                });
+            }
+            
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(donateButton);
+                }
+            }
+        });
 
         bookDonationTable.getColumns().clear();
-        bookDonationTable.getColumns().addAll(bloodTypeCol, unitsCol, locationCol, dateCol, statusCol);
+        bookDonationTable.getColumns().addAll(bloodTypeCol, unitsCol, locationCol, dateCol, selectCol);
 
-        // Add sample data
+        // Add sample data - only show actual needed rows
         ObservableList<Donation> donations = FXCollections.observableArrayList(
-            new Donation("A+", 1, "Dhaka", LocalDate.of(2024, 1, 15), "Pending"),
-            new Donation("B-", 2, "Chittagong", LocalDate.of(2024, 2, 20), "Approved"),
-            new Donation("O+", 1, "Sylhet", LocalDate.of(2024, 3, 10), "Pending"),
-            new Donation("AB+", 3, "Khulna", LocalDate.of(2024, 4, 5), "Approved"),
-            new Donation("A-", 1, "Rajshahi", LocalDate.of(2024, 5, 1), "Pending"),
-            new Donation("B+", 2, "Barisal", LocalDate.of(2024, 6, 12), "Approved")
+            new Donation("A+", 2, "Daffodil Medical Institute", LocalDate.of(2025, 8, 5), "Pending"),
+            new Donation("O-", 3, "General Hospital", LocalDate.of(2025, 8, 4), "Completed"),
+            new Donation("B+", 1, "St. Mary's", LocalDate.of(2025, 8, 3), "Processing"),
+            new Donation("AB-", 4, "Emergency Care", LocalDate.of(2025, 8, 2), "Pending"),
+            new Donation("O+", 2, "Central Hospital", LocalDate.of(2025, 8, 1), "Completed")
         );
         
-        // Limit to 5 rows
-        bookDonationTable.setItems(FXCollections.observableArrayList(donations.subList(0, Math.min(donations.size(), 5))));
+        bookDonationTable.setItems(donations);
+        
+        // Configure table properties to prevent scrolling and show only needed rows
+        bookDonationTable.setFixedCellSize(45);
+        bookDonationTable.prefHeightProperty().bind(bookDonationTable.fixedCellSizeProperty().multiply(javafx.beans.binding.Bindings.size(bookDonationTable.getItems()).add(1.01)));
+        bookDonationTable.minHeightProperty().bind(bookDonationTable.prefHeightProperty());
+        bookDonationTable.maxHeightProperty().bind(bookDonationTable.prefHeightProperty());
         
         // Set column widths (percentage-based)
-        bloodTypeCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.2));
-        unitsCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.15));
-        locationCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.25));
-        dateCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.25));
-        statusCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.15));
+        bloodTypeCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.15));
+        unitsCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.1));
+        locationCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.35));
+        dateCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.2));
+        selectCol.prefWidthProperty().bind(bookDonationTable.widthProperty().multiply(0.2));
     }
     
     private void initializeAvailableBloodTable() {
         // Initialize table columns
-        TableColumn<BloodAvailability, String> bloodTypeCol = new TableColumn<>("Blood Type");
-        bloodTypeCol.setCellValueFactory(new PropertyValueFactory<>("bloodType"));
+        TableColumn<BloodAvailability, String> hospitalCol = new TableColumn<>("Hospital/Facility");
+        hospitalCol.setCellValueFactory(new PropertyValueFactory<>("hospital"));
 
-        TableColumn<BloodAvailability, String> locationCol = new TableColumn<>("Location");
-        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        TableColumn<BloodAvailability, String> componentsCol = new TableColumn<>("Available Components");
+        componentsCol.setCellValueFactory(new PropertyValueFactory<>("components"));
 
-        TableColumn<BloodAvailability, Integer> unitsCol = new TableColumn<>("Units");
-        unitsCol.setCellValueFactory(new PropertyValueFactory<>("units"));
+        TableColumn<BloodAvailability, Integer> totalUnitsCol = new TableColumn<>("Total Units");
+        totalUnitsCol.setCellValueFactory(new PropertyValueFactory<>("totalUnits"));
+        
+        // Add a status column
+        TableColumn<BloodAvailability, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(cellData -> {
+            int units = cellData.getValue().getTotalUnits();
+            String status;
+            if (units > 50) {
+                status = "Available";
+            } else if (units >= 25 && units <= 50) {
+                status = "Low Stock";
+            } else {
+                status = "Critical";
+            }
+            return new javafx.beans.property.SimpleStringProperty(status);
+        });
+        
+        // Custom cell factory for status column to apply styling
+        statusCol.setCellFactory(column -> new TableCell<BloodAvailability, String>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setText(null);
+                    getStyleClass().removeAll("status-completed", "status-pending", "status-processing");
+                } else {
+                    setText(status);
+                    getStyleClass().removeAll("status-completed", "status-pending", "status-processing");
+                    switch (status.toLowerCase()) {
+                        case "available":
+                            getStyleClass().add("status-completed");
+                            break;
+                        case "low stock":
+                            getStyleClass().add("status-pending");
+                            break;
+                        case "critical":
+                            getStyleClass().add("status-processing");
+                            break;
+                    }
+                }
+            }
+        });
 
         availableBloodTable.getColumns().clear();
-        availableBloodTable.getColumns().addAll(bloodTypeCol, locationCol, unitsCol);
+        availableBloodTable.getColumns().addAll(hospitalCol, componentsCol, totalUnitsCol, statusCol);
 
-        // Add sample data
+        // Add sample data with random components
+        List<String> bloodComponents = Arrays.asList("Whole blood", "RCC/PRBC", "SDP", "FFP");
+        java.util.Random random = new java.util.Random();
+
         ObservableList<BloodAvailability> bloodAvailability = FXCollections.observableArrayList(
-            new BloodAvailability("A+", "Central Hospital", 15),
-            new BloodAvailability("O-", "City Medical Center", 8),
-            new BloodAvailability("B+", "University Hospital", 12),
-            new BloodAvailability("AB-", "General Hospital", 5),
-            new BloodAvailability("A+", "Evercare Hospital", 10),
-            new BloodAvailability("O+", "Square Hospital", 7)
+            new BloodAvailability("Central Hospital", bloodComponents.get(random.nextInt(bloodComponents.size())), 60),
+            new BloodAvailability("City Medical Center", bloodComponents.get(random.nextInt(bloodComponents.size())), 30),
+            new BloodAvailability("University Hospital", bloodComponents.get(random.nextInt(bloodComponents.size())), 10),
+            new BloodAvailability("General Hospital", bloodComponents.get(random.nextInt(bloodComponents.size())), 45),
+            new BloodAvailability("Evercare Hospital", bloodComponents.get(random.nextInt(bloodComponents.size())), 70),
+            new BloodAvailability("Square Hospital", bloodComponents.get(random.nextInt(bloodComponents.size())), 20)
         );
         
-        // Limit to 5 rows
-        availableBloodTable.setItems(FXCollections.observableArrayList(bloodAvailability.subList(0, Math.min(bloodAvailability.size(), 5))));
+        availableBloodTable.setItems(bloodAvailability);
+        
+        // Configure table properties to prevent scrolling and show only needed rows
+        availableBloodTable.setFixedCellSize(45);
+        availableBloodTable.prefHeightProperty().bind(availableBloodTable.fixedCellSizeProperty().multiply(javafx.beans.binding.Bindings.size(availableBloodTable.getItems()).add(1.01)));
+        availableBloodTable.minHeightProperty().bind(availableBloodTable.prefHeightProperty());
+        availableBloodTable.maxHeightProperty().bind(availableBloodTable.prefHeightProperty());
         
         // Set column widths (percentage-based)
-        bloodTypeCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.25));
-        locationCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.5));
-        unitsCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.25));
+        hospitalCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.25));
+        componentsCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.35));
+        totalUnitsCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.15));
+        statusCol.prefWidthProperty().bind(availableBloodTable.widthProperty().multiply(0.25));
     }
     
     private void initializeDonationStats() {
@@ -305,25 +386,72 @@ public class DonorDashboardController {
         stage.show();
     }
     
+    // Method to handle donate button click
+    private void handleDonateButtonClick(Donation donation) {
+        // Get user's blood group from the UI
+        String userBloodGroup = bloodGroupText.getText().replace("My Blood Group: ", "").trim();
+        String donationBloodGroup = donation.getBloodType();
+        
+        // Check if blood groups are compatible
+        boolean isCompatible = isBloodGroupCompatible(userBloodGroup, donationBloodGroup);
+        
+        // Create alert dialog
+        javafx.scene.control.Alert alert;
+        if (isCompatible) {
+            alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Donation Confirmation");
+            alert.setHeaderText("Blood Group Compatible");
+            alert.setContentText("You are about to donate " + donation.getUnits() + " units of blood to " + 
+                                donation.getLocation() + ". Proceed?");
+            
+            // Add confirmation button
+            javafx.scene.control.ButtonType confirmButton = new javafx.scene.control.ButtonType("Confirm Donation");
+            alert.getButtonTypes().setAll(confirmButton, javafx.scene.control.ButtonType.CANCEL);
+            
+            alert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == confirmButton) {
+                    // Update donation status to "Processing"
+                    donation.setStatus("Processing");
+                    bookDonationTable.refresh();
+                }
+            });
+        } else {
+            alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+            alert.setTitle("Incompatible Blood Group");
+            alert.setHeaderText("Blood Group Incompatible");
+            alert.setContentText("You cannot donate to this request as your blood group (" + 
+                                userBloodGroup + ") is not compatible with the requested blood group (" + 
+                                donationBloodGroup + ").");
+            alert.showAndWait();
+        }
+    }
+    
+    // Method to check blood group compatibility
+    private boolean isBloodGroupCompatible(String donorBloodGroup, String recipientBloodGroup) {
+        // For simplicity, we'll just check if blood groups match exactly
+        // In a real application, you would implement proper blood type compatibility rules
+        return donorBloodGroup.equalsIgnoreCase(recipientBloodGroup);
+    }
+    
     // Inner class for blood availability
     public static class BloodAvailability {
-        private String bloodType;
-        private String location;
-        private int units;
+        private String hospital;
+        private String components;
+        private int totalUnits;
         
-        public BloodAvailability(String bloodType, String location, int units) {
-            this.bloodType = bloodType;
-            this.location = location;
-            this.units = units;
+        public BloodAvailability(String hospital, String components, int totalUnits) {
+            this.hospital = hospital;
+            this.components = components;
+            this.totalUnits = totalUnits;
         }
         
-        public String getBloodType() { return bloodType; }
-        public void setBloodType(String bloodType) { this.bloodType = bloodType; }
+        public String getHospital() { return hospital; }
+        public void setHospital(String hospital) { this.hospital = hospital; }
         
-        public String getLocation() { return location; }
-        public void setLocation(String location) { this.location = location; }
+        public String getComponents() { return components; }
+        public void setComponents(String components) { this.components = components; }
         
-        public int getUnits() { return units; }
-        public void setUnits(int units) { this.units = units; }
+        public int getTotalUnits() { return totalUnits; }
+        public void setTotalUnits(int totalUnits) { this.totalUnits = totalUnits; }
     }
 }

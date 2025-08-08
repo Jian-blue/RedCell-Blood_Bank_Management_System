@@ -55,7 +55,7 @@
                 <Insets top="15" right="15" bottom="15" left="15" />
             </padding>
             <Text styleClass="section-header" text="Book Donation" />
-            <TableView fx:id="bookDonationTable" VBox.vgrow="ALWAYS" styleClass="donation-table">
+            <TableView fx:id="bookDonationTable" VBox.vgrow="ALWAYS" styleClass="recent-requests-table">
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
@@ -68,7 +68,7 @@
                 <Insets top="15" right="15" bottom="15" left="15" />
             </padding>
             <Text styleClass="section-header" text="Available Blood Around You" />
-            <TableView fx:id="availableBloodTable" VBox.vgrow="ALWAYS" styleClass="blood-table">
+            <TableView fx:id="availableBloodTable" VBox.vgrow="ALWAYS" styleClass="recent-requests-table">
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>

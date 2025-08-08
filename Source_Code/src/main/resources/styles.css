@@ -1037,6 +1037,27 @@
     -fx-font-weight: bold;
 }
 
+/* Donate Button Style */
+.donate-button {
+    -fx-background-color: #8B0000;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1);
+}
+
+.donate-button:hover {
+    -fx-background-color: #A52A2A;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 2);
+}
+
+.donate-button:pressed {
+    -fx-background-color: #800000;
+}
+
 /* Donors Grid Styling */
 .donors-container {
     -fx-padding: 10px 0;
