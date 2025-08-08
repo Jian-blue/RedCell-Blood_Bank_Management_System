@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.redcell.RequestBloodController"
+           styleClass="themed-scrollpane"
+           fitToWidth="true"
+           fitToHeight="true"
+           prefWidth="1280" 
+           prefHeight="720">
+           
+    <VBox styleClass="main-background"
+          alignment="CENTER">
+        
+        <VBox styleClass="auth-container" maxWidth="800" spacing="25">
+            <!-- Header -->
+            <VBox alignment="CENTER" spacing="10">
+                <Text text="Request Blood" styleClass="auth-title"/>
+                <Text text="Fill in the details to request blood units" styleClass="auth-subtitle"/>
+            </VBox>
+            
+            <!-- Form -->
+            <VBox spacing="20">
+                <GridPane vgap="20" hgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    
+                    <!-- Blood Type and Units -->
+                    <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Blood Type" styleClass="input-label"/>
+                        <ComboBox fx:id="bloodType" 
+                                promptText="Select blood type" 
+                                styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Number of Units" styleClass="input-label"/>
+                        <TextField fx:id="units" 
+                                 promptText="Enter number of units needed" 
+                                 styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <!-- Facility Information -->
+                    <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Facility Name" styleClass="input-label"/>
+                        <TextField fx:id="facilityName" 
+                                 promptText="Enter facility name" 
+                                 styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Area/Location" styleClass="input-label"/>
+                        <TextField fx:id="areaField" 
+                                 promptText="Enter area or location" 
+                                 styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <!-- Contact and Date -->
+                    <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Contact Number" styleClass="input-label"/>
+                        <TextField fx:id="contactField" 
+                                 promptText="Enter 10-digit contact number" 
+                                 styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Required Date" styleClass="input-label"/>
+                        <DatePicker fx:id="requiredDate" 
+                                  promptText="Select required date" 
+                                  styleClass="auth-input"/>
+                    </VBox>
+                    
+                    <!-- Patient Condition -->
+                    <VBox spacing="8" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                        <Label text="Patient Condition" styleClass="input-label"/>
+                        <TextArea fx:id="patientCondition" 
+                                prefRowCount="3"
+                                promptText="Describe patient condition and reason for request" 
+                                styleClass="auth-input"/>
+                    </VBox>
+                </GridPane>
+                
+                <!-- Error Message -->
+                <Text fx:id="errorMessage" 
+                      styleClass="error-text"
+                      visible="false"
+                      managed="true"/>
+                
+                <Button fx:id="submitButton" 
+                        text="Submit Request" 
+                        styleClass="auth-button">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </VBox>
+        
+        <!-- Footer -->
+        <Text styleClass="copyright-text" text="© 2024 RedCell. All rights reserved.">
+            <VBox.margin>
+                <Insets top="30" bottom="30"/>
+            </VBox.margin>
+        </Text>
+    </VBox>
+</ScrollPane>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox stylesheets="@styles.css" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.redcell.DashboardController">
+
+    <!-- Left Sidebar -->
+    <VBox maxWidth="231.0" minWidth="78.0" prefHeight="407.0" prefWidth="220.0" styleClass="sidebar">
+        <padding>
+            <Insets bottom="20" left="15" right="15" top="20" />
+        </padding>
+        
+        <!-- Logo and Title -->
+        <HBox alignment="CENTER" styleClass="logo-container">
+            <Text styleClass="logo-text" text="RedCell" />
+        </HBox>
+        
+        <!-- Navigation Links -->
+        <VBox prefHeight="137.0" prefWidth="190.0" styleClass="nav-container" VBox.vgrow="ALWAYS">
+            <Button fx:id="homeButton" styleClass="nav-button" text="Home" onAction="#handleHomeAction">
+                <graphic>
+                    <Region styleClass="home-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="dashboardButton" styleClass="nav-button" text="Dashboard" onAction="#handleDashboardAction">
+                <graphic>
+                    <Region styleClass="dashboard-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="requestBloodButton" styleClass="nav-button" text="Request Blood" onAction="#handleRequestBloodAction">
+                <graphic>
+                    <Region styleClass="request-blood-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="trackRequestButton" styleClass="nav-button" text="Track Request" onAction="#handleTrackRequestAction">
+                <graphic>
+                    <Region styleClass="track-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="registerButton" styleClass="nav-button" text="Register as Donor" onAction="#handleRegisterAction">
+                <graphic>
+                    <Region styleClass="register-icon" />
+                </graphic>
+            </Button>
+            <Button fx:id="loginButton" styleClass="nav-button" text="Log In / Out" onAction="#handleLoginAction">
+                <graphic>
+                    <Region styleClass="login-icon" />
+                </graphic>
+            </Button>
+            <Region VBox.vgrow="ALWAYS" />
+            
+            <!-- Blood Drop Image -->
+            <HBox alignment="CENTER_RIGHT">
+                <VBox.margin>
+                    <Insets bottom="0" left="0" right="0" />
+                </VBox.margin>
+                <ImageView fitHeight="268.0" fitWidth="158.0" preserveRatio="true" styleClass="blood-drop-image">
+                    <Image url="@img/blood-drop.png" />
+                </ImageView>
+            </HBox>
+            
+            <!-- Footer Section -->
+            <VBox styleClass="sidebar-footer" spacing="10">
+                <Text styleClass="version-text" text="Version 1.0" />
+                <HBox spacing="5" alignment="CENTER">
+                    <Button fx:id="aboutButton" styleClass="footer-link" text="About" onAction="#handleAboutAction" />
+                    <Text text="|" styleClass="footer-separator" />
+                    <Button fx:id="contactButton" styleClass="footer-link" text="Contact" onAction="#handleContactAction" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <VBox styleClass="main-content" HBox.hgrow="ALWAYS">
+        <!-- Logo and Title Section -->
+        <HBox styleClass="header-container">
+            <HBox styleClass="logo-title-container" alignment="CENTER_LEFT" spacing="20" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" bottom="20" left="40"/>
+                </padding>
+                <ImageView fitHeight="80" preserveRatio="true" styleClass="app-logo">
+                    <Image url="@img/redcell-logo-down.png"/>
+                </ImageView>
+                <VBox alignment="CENTER_LEFT" spacing="5">
+                    <Text styleClass="app-title" text="RedCell"/>
+                    <Text styleClass="app-subtitle" text="Blood Bank Management System"/>
+                </VBox>
+            </HBox>
+
+            <!-- User Profile Section -->
+            <HBox styleClass="user-profile-section">
+                <padding>
+                    <Insets top="20" bottom="20" right="40"/>
+                </padding>
+                <HBox styleClass="user-profile-container" alignment="CENTER" spacing="20">
+                    <Button fx:id="notificationButton" styleClass="notification-button" onAction="#handleNotificationsAction">
+                        <graphic>
+                            <StackPane>
+                                <Region styleClass="notification-icon"/>
+                                <StackPane fx:id="notificationBadgePane" styleClass="notification-badge" StackPane.alignment="TOP_RIGHT">
+                                    <Text fx:id="notificationCount" styleClass="notification-count" text="2"/>
+                                </StackPane>
+                            </StackPane>
+                        </graphic>
+                    </Button>
+                    
+                    <Text fx:id="userNameText" styleClass="user-name" text="Guest"/>
+                    
+                    <ImageView fx:id="userProfileImage" fitHeight="40" fitWidth="40" styleClass="profile-image">
+                        <Image url="@img/default-pfp.png"/>
+                    </ImageView>
+                </HBox>
+            </HBox>
+        </HBox>
+        
+        <!-- Dynamic Content Area -->
+        <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS">
+        </StackPane>
+    </VBox>
+</HBox>
+ 
