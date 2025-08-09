@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.redcell.TrackRequestController"
+      styleClass="content-container"
+      spacing="20"
+      alignment="CENTER">
+    
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <Text styleClass="login-title" text="Track Blood Request"/>
+    
+    <VBox styleClass="form-container" spacing="15">
+        <HBox spacing="10" alignment="CENTER">
+            <TextField fx:id="requestId" promptText="Enter Request ID" styleClass="text-field" HBox.hgrow="ALWAYS"/>
+            <StackPane>
+                <Button fx:id="trackButton" text="Track Request" styleClass="primary-button"/>
+                <ProgressIndicator fx:id="loadingIndicator" styleClass="progress-indicator" visible="false"/>
+            </StackPane>
+        </HBox>
+        
+        <Text fx:id="errorMessage" styleClass="error-message"/>
+        
+<ScrollPane fitToWidth="true" styleClass="main-scroll-pane">
+            <VBox fx:id="requestDetails" styleClass="request-details" spacing="15" visible="false">
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Status: "/>
+                    <HBox fx:id="statusContainer" alignment="CENTER_LEFT">
+                        <Text fx:id="status" styleClass="detail-value"/>
+                    </HBox>
+                </HBox>
+                
+                <Separator/>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Patient Condition: "/>
+                    <Text fx:id="patientCondition" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Blood Type: "/>
+                    <Text fx:id="bloodType" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Units: "/>
+                    <Text fx:id="units" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Facility: "/>
+                    <Text fx:id="facilityName" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Required Date: "/>
+                    <Text fx:id="requiredDate" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Request Time: "/>
+                    <Text fx:id="time" styleClass="detail-value"/>
+                </HBox>
+                
+                <HBox styleClass="detail-row">
+                    <Text styleClass="detail-label" text="Contact: "/>
+                    <Text fx:id="contact" styleClass="detail-value"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</VBox> 
