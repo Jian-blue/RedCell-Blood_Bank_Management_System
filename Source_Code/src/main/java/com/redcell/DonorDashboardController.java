@@ -189,22 +189,23 @@ public class DonorDashboardController {
         bookDonationTable.getColumns().clear();
         bookDonationTable.getColumns().addAll(bloodTypeCol, unitsCol, locationCol, dateCol, statusCol, selectCol);
 
-        // Add sample data - only show actual needed rows
-        ObservableList<Request> allRequests = FXCollections.observableArrayList(
-            new Request("REQ001", "A+", 2, "Daffodil Medical Institute", "Mirpur", "Pending", "Aug 05, 2025", "Critical", "10:00 AM", "123-456-7890", "Admin"),
-            new Request("REQ002", "O-", 3, "General Hospital", "Gulshan", "Completed", "Aug 04, 2025", "Stable", "11:30 AM", "123-456-7891", "Admin"),
-            new Request("REQ003", "B+", 1, "Dhanmondi Diagonostics", "Dhanmondi", "Processing", "Aug 03, 2025", "Emergency", "09:15 AM", "123-456-7892", "Admin"),
-
-            new Request("REQ004", "AB-", 4, "Emergency Care", "Uttara", "Pending", "Aug 02, 2025", "Critical", "02:45 PM", "123-456-7893", "Admin"),
-            new Request("REQ005", "O+", 2, "Central Hospital", "Banani", "Pending", "Aug 01, 2025", "Stable", "04:30 PM", "123-456-7894", "Admin")
-
-        );
-        
-        // Filter out requests with "Completed" status
-        ObservableList<Request> filteredRequests = allRequests.filtered(request -> 
-            !request.getStatus().equalsIgnoreCase("Completed"));
-        
-        bookDonationTable.setItems(filteredRequests);
+        // Load blood requests from database
+        try {
+            List<Request> allRequests = DbHelper.getPendingBloodRequests();
+            ObservableList<Request> observableRequests = FXCollections.observableArrayList(allRequests);
+            
+            // Filter out requests with "Completed" status
+            ObservableList<Request> filteredRequests = observableRequests.filtered(request -> 
+                !request.getStatus().equalsIgnoreCase("Completed"));
+            
+            bookDonationTable.setItems(filteredRequests);
+        } catch (Exception e) {
+            System.err.println("Error loading blood requests: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Fallback to empty list if database fails
+            bookDonationTable.setItems(FXCollections.observableArrayList());
+        }
         
         // Configure table properties to prevent scrolling and show only needed rows
         bookDonationTable.setFixedCellSize(45);
@@ -440,25 +441,39 @@ public class DonorDashboardController {
             
             alert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == confirmButton) {
-                    // Create a new Donation object from the Request
-                    String donorId = "DONOR" + UUID.randomUUID().toString().substring(0, 8); // Generate a donor ID
-                    Donation newDonation = new Donation(request, donorId);
-                    
-                    // Add the donation to the facility's list of donations
-                    Facility facility = request.getFacilityInfo();
-                    if (facility.getBloodDonations() == null) {
-                        facility.setBloodDonations(new ArrayList<>());
+                    try {
+                        // Create a new donation in the database
+                        String donationId = "DON-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+                        String donorId = loggedInUsername; // Use actual logged-in user
+                        
+                        Donation newDonation = new Donation(
+                            request.getRequestId(),
+                            request.getBloodType(),
+                            request.getUnits(),
+                            request.getHospital(),
+                            LocalDate.now(),
+                            "PENDING", // Initial status
+                            donorId
+                        );
+                        boolean donationCreated = DbHelper.createDonation(newDonation, loggedInUsername);
+                        
+                        if (donationCreated) {
+                            // Update the request status to Processing
+                            request.setStatus("Processing");
+                            
+                            // Refresh the table to show the updated status
+                            bookDonationTable.refresh();
+                            
+                            // Show confirmation message
+                            showAlert("Donation Confirmed", "Your donation has been confirmed and saved to the database. Donation ID: " + donationId + ". You will be notified when the facility approves your donation.");
+                        } else {
+                            showAlert("Error", "Failed to create donation record. Please try again.");
+                        }
+                        
+                    } catch (Exception e) {
+                        showAlert("Error", "Error creating donation: " + e.getMessage());
+                        e.printStackTrace();
                     }
-                    facility.getBloodDonations().add(newDonation);
-                    
-                    // Update the request status to Processing
-                    request.setStatus("Processing");
-                    
-                    // Refresh the table to show the updated status
-                    bookDonationTable.refresh();
-                    
-                    // Show confirmation message
-                    showAlert("Donation Confirmed", "Your donation has been confirmed and is now processing. You will be notified when the facility approves your donation.");
                 }
             });
         } else {

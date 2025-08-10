@@ -41,6 +41,9 @@ public class RedCellApp extends Application {
     }
 
     public static void main(String[] args) {
+        DbHelper.createNewDatabase();
+        DbHelper.createTables();
+        DbHelper.updateSchema();
         launch(RedCellApp.class,args);
     }
-} 
+}

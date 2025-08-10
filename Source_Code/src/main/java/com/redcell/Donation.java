@@ -11,13 +11,18 @@ public class Donation {
     private String status;
     private String donorId;
 
-    public Donation(String requestId, String bloodType, int units, String location, LocalDate date, String status) {
+    public Donation(String requestId, String bloodType, int units, String location, LocalDate date, String status, String donorId) {
         this.requestId = requestId;
         this.bloodType = bloodType;
         this.units = units;
         this.location = location;
         this.date = date;
         this.status = status;
+        this.donorId = donorId;
+    }
+
+    public Donation(String requestId, String bloodType, int units, String location, LocalDate date, String status) {
+        this(requestId, bloodType, units, location, date, status, null); // Call the new constructor with null for donorId
     }
     
     // Constructor from Request

@@ -61,11 +61,32 @@ public class RegisterController {
         }
 
         try {
-            // successful registration logic
-            System.out.println("Registration Successful for: " + username.getText());
-            showErrorMessage("Registration successful!");
-            // You could add code here to clear fields or navigate to another page
-            // For now, we just show a success message.
+            // Check if username already exists
+            if (DbHelper.usernameExists(username.getText().trim())) {
+                showErrorMessage("Username already exists. Please choose a different username.");
+                return;
+            }
+            
+            // Register the user in the database
+            boolean registrationSuccess = DbHelper.registerUser(
+                username.getText().trim(),
+                password.getText(), // In production, hash the password
+                fullName.getText().trim(),
+                email.getText().trim(),
+                phone.getText().trim(),
+                address.getText().trim(),
+                bloodType.getValue(),
+                dateOfBirth.getValue().toString(),
+                "" // area - can be extracted from address or left empty for now
+            );
+            
+            if (registrationSuccess) {
+                showErrorMessage("Registration successful! You can now log in.");
+                // Clear all fields after successful registration
+                clearFields();
+            } else {
+                showErrorMessage("Registration failed. Please try again.");
+            }
 
         } catch (Exception e) {
             showErrorMessage("Error during registration: " + e.getMessage());
@@ -127,6 +148,17 @@ public class RegisterController {
     private void hideErrorMessage() {
         errorMessage.setVisible(false);
         errorMessage.setManaged(false);
+    }
+    
+    private void clearFields() {
+        fullName.clear();
+        email.clear();
+        phone.clear();
+        address.clear();
+        username.clear();
+        password.clear();
+        dateOfBirth.setValue(null);
+        bloodType.setValue(null);
     }
 
     @FXML

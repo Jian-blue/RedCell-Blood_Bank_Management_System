@@ -115,42 +115,52 @@ public class RequestBloodController {
             return;
         }
         
-        // Create a new request
-        String requestId = generateRequestId();
-        String formattedDate = requiredDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
-        
-        Request newRequest = new Request(
-            requestId,
-            bloodType.getValue(),
-            Integer.parseInt(units.getText()),
-            facilityName.getText(),
-            areaField.getText(),
-            "Pending",
-            formattedDate,
-            patientCondition.getText(),
-            currentTime,
-            contactField.getText(),
-            "current_user" // This would be replaced with actual logged-in user
-        );
-        
-        // TODO: Save the request to database or storage
-        
-        // Show success message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Request Submitted");
-        alert.setHeaderText(null);
-        alert.setContentText("Your blood request has been submitted successfully!\nRequest ID: " + requestId);
-        
-        // Apply custom style to the alert
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
-        
-        alert.showAndWait();
-        
-        // Clear form fields
-        clearForm();
+        try {
+            // Create a new request
+            String requestId = generateRequestId();
+            String formattedDate = requiredDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+            
+            // Save the request to database
+            Request newRequest = new Request(
+                requestId,
+                bloodType.getValue(),
+                Integer.parseInt(units.getText()),
+                facilityName.getText(),
+                areaField.getText(),
+                "Pending",
+                formattedDate,
+                patientCondition.getText(),
+                currentTime,
+                contactField.getText(),
+                "current_user" // This would be replaced with actual logged-in user ID
+            );
+            boolean requestSaved = DbHelper.createBloodRequest(newRequest, "current_user"); // Assuming "current_user" is the logged-in user's ID
+            
+            if (requestSaved) {
+                // Show success message
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Request Submitted");
+                alert.setHeaderText(null);
+                alert.setContentText("Your blood request has been submitted successfully!\nRequest ID: " + requestId);
+                
+                // Apply custom style to the alert
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+                dialogPane.getStyleClass().add("custom-alert");
+                
+                alert.showAndWait();
+                
+                // Clear form fields
+                clearForm();
+            } else {
+                showError("Failed to submit blood request. Please try again.");
+            }
+            
+        } catch (Exception e) {
+            showError("Error submitting request: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private String generateRequestId() {
